@@ -1,29 +1,25 @@
 # Site settings
-title: BY Blog
-SEOTitle: 柏荧的博客 | BY Blog
-header-img: img/post-bg-desk.jpg
-email: qiubaiying@gmail.com
-description: "Every failure is leading towards success."
-keyword: "BY, BY Blog, 柏荧的博客, qiubaiying, 邱柏荧, iOS, Apple, iPhone"
-url: "http://qiubaiying.github.io"          # your host, for absolute URL
+title: XiaoSheng Blog
+SEOTitle: 王晓圣的博客 | XiaoSheng Blog
+header-img: img/home-bg.jpg
+email: xiaoshengmr@163.com
+description: "关于分布式计算引擎、大规模个性化推荐实时机器学习 | 王晓圣，Flink & Distributing Process，Software Engineer | 这里是 @XiaoSheng 王晓圣 的个人博客，与你一起发现更大的世界。"
+keyword: "XiaoSheng, XiaoSheng Blog, 王晓圣的博客, xiaoshengWang, 王晓圣, iOS, Apple, iPhone"
+url: "https://github.com/xiaoshengMr"          # your host, for absolute URL
 baseurl: ""      # for example, '/blog' if your blog hosted on 'host/blog'
-github_repo: "https://github.com/qiubaiying/qiubaiying.github.io.git" # you code repository
+github_repo: "http://xiaoshengmr.github.io/" # you code repository
 
 # Sidebar settings
 sidebar: true                           # whether or not using Sidebar.
-sidebar-about-description: "Goals determine what you going to be!"
-sidebar-avatar: /img/about-BY-gentle.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
+sidebar-about-description: "王晓圣, Flink分布式计算引擎,大规模个性化推荐实时机器学习系统研发"
+sidebar-avatar: /img/avatar_xs.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
 
 
 
 # SNS settings
 RSS: false
-# weibo_username:     qiubaiying
-zhihu_username:     qiubaiying
-github_username:    qiubaiying
-facebook_username:  baiying.qiu.7
-jianshu_username:   e71990ada2fd
-#twitter_username:   qiubaiying
+zhihu_username:     xiaoshengMr
+github_username:    xiaoshengMr
 
 
 
@@ -77,8 +73,8 @@ gitalk:
 ba_track_id: b50bf2b12b5338a1845e33832976fd68
 
 # Google Analytics
-ga_track_id: 'UA-90855596-1'            # Format: UA-xxxxxx-xx
-ga_domain: qiubaiying.top               # 默认的是 auto, 这里我是自定义了的域名，你如果没有自己的域名，需要改成auto
+#ga_track_id: 'UA-90855596-1'            # Format: UA-xxxxxx-xx
+#ga_domain: qiubaiying.top               # 默认的是 auto, 这里我是自定义了的域名，你如果没有自己的域名，需要改成auto
 
 
 
@@ -99,16 +95,7 @@ service-worker: true
 # Friends
 friends: [
     {
-        title: "WY",
-        href: "http://zhengwuyang.com"
-    },{
-        title: "简书·BY",
-        href: "http://www.jianshu.com/u/e71990ada2fd"
-    },{
-        title: "Apple",
-        href: "https://apple.com"
-    },{
-        title: "Apple Developer",
-        href: "https://developer.apple.com/"
+        title: "知乎·王晓圣",
+        href: "https://www.zhihu.com/people/xiao-sheng-76-68-52/"
     }
 ]
