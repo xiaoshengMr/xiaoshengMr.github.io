@@ -22,14 +22,14 @@
 
     <meta name="description" content="Flink作为一款高性能的流计算处理引擎 通过定制的序列化工具、高效的内存管理机制，缓存友好的数据结构、堆外内存的控制 以及 JIT编译等 使得在JVM上能够获得类似C极致的处理性能 本文将深入分析Flink是如何进行积极的内存管理 Flink并不是将对象直接托管于JVM分配到堆上 而是将对象都序列化到一个块上 MemorySegment 是Flink内存分配的最小单元">
 <meta property="og:type" content="article">
-<meta property="og:title" content="FLink MemorySegment">
+<meta property="og:title" content="Flink MemorySegment">
 <meta property="og:url" content="http://xiaoshengmr.top/2022/12/04/Flink-MemorySegment/index.html">
 <meta property="og:site_name" content="xiaoshengmr">
 <meta property="og:description" content="Flink作为一款高性能的流计算处理引擎 通过定制的序列化工具、高效的内存管理机制，缓存友好的数据结构、堆外内存的控制 以及 JIT编译等 使得在JVM上能够获得类似C极致的处理性能 本文将深入分析Flink是如何进行积极的内存管理 Flink并不是将对象直接托管于JVM分配到堆上 而是将对象都序列化到一个块上 MemorySegment 是Flink内存分配的最小单元">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/008vxvgGly1h8r2gtwnbdj31800ja0w7.jpg">
 <meta property="article:published_time" content="2022-12-03T16:00:00.000Z">
-<meta property="article:modified_time" content="2022-12-03T16:38:00.631Z">
+<meta property="article:modified_time" content="2022-12-03T16:41:32.021Z">
 <meta property="article:author" content="王晓圣">
 <meta property="article:tag" content="计算">
 <meta name="twitter:card" content="summary">
@@ -40,10 +40,10 @@
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://xiaoshengmr.top/2022/12/04/Flink-MemorySegment/","path":"2022/12/04/Flink-MemorySegment/","title":"FLink MemorySegment"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://xiaoshengmr.top/2022/12/04/Flink-MemorySegment/","path":"2022/12/04/Flink-MemorySegment/","title":"Flink MemorySegment"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>FLink MemorySegment | xiaoshengmr</title>
+<title>Flink MemorySegment | xiaoshengmr</title>
   
 
 
@@ -240,12 +240,12 @@
     </span>
     
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="FLink MemorySegment | xiaoshengmr">
+      <meta itemprop="name" content="Flink MemorySegment | xiaoshengmr">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          FLink MemorySegment
+          Flink MemorySegment
         </h1>
 
         <div class="post-meta-container">
@@ -257,7 +257,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2022-12-04 00:00:00 / 修改时间：00:38:00" itemprop="dateCreated datePublished" datetime="2022-12-04T00:00:00+08:00">2022-12-04</time>
+      <time title="创建时间：2022-12-04 00:00:00 / 修改时间：00:41:32" itemprop="dateCreated datePublished" datetime="2022-12-04T00:00:00+08:00">2022-12-04</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
