@@ -156,18 +156,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">1</span>
+          <span class="site-state-item-count">2</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-count">2</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-count">2</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -218,6 +218,94 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://xiaoshengmr.top/2022/12/04/Flink-MemorySegment/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/media/xiaosheng.jpg">
+      <meta itemprop="name" content="王晓圣">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xiaoshengmr">
+      <meta itemprop="description" content="">
+    </span>
+    
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | xiaoshengmr">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2022/12/04/Flink-MemorySegment/" class="post-title-link" itemprop="url">FLink MemorySegment</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2022-12-04 00:00:00 / 修改时间：00:33:16" itemprop="dateCreated datePublished" datetime="2022-12-04T00:00:00+08:00">2022-12-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/FLink/" itemprop="url" rel="index"><span itemprop="name">FLink</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="FLink-MemorySegment"><a href="#FLink-MemorySegment" class="headerlink" title="FLink MemorySegment"></a>FLink MemorySegment</h3><p>Flink作为一款高性能的流计算处理引擎 通过定制的序列化工具、高效的内存管理机制，缓存友好的数据结构、堆外内存的控制 以及 JIT编译等 使得在JVM上能够获得类似C极致的处理性能 本文将深入分析Flink是如何进行积极的内存管理</p>
+<p>Flink并不是将对象直接托管于JVM分配到堆上 而是将对象都序列化到一个块上 MemorySegment 是Flink内存分配的最小单元 </p>
+<p><img src="https://tva1.sinaimg.cn/large/008vxvgGly1h8r2gtwnbdj31800ja0w7.jpg"></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/12/04/Flink-MemorySegment/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="http://xiaoshengmr.top/2022/03/27/parquet/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -254,7 +342,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-10-29 22:22:06" itemprop="dateModified" datetime="2022-10-29T22:22:06+08:00">2022-10-29</time>
+      <time title="修改时间：2022-12-04 00:33:02" itemprop="dateModified" datetime="2022-12-04T00:33:02+08:00">2022-12-04</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -280,19 +368,14 @@
 <p><img src="https://tva1.sinaimg.cn/large/e6c9d24ely1h3cfiqh13lj214n0jymzh.jpg" alt="存储对比"></p>
 <p>Google 的 Dremel系统 通过使用 record shredding and assembly algorithm 来表达复杂的嵌套数据类型，同时将列进行高效压缩 Parquet就是基于Dremel的数据模型和算法的工程实现.</p>
 <p>Parquet是不绑定数据处理框架的的 可以适配多种组建查询引擎、计算框架、数据模型 parquet-format 定义了 Parquet内部的数据类型和存储格式 parquet-mr 包含了外部对象结构到Parquet数据类型的映射和转换</p>
-<h3 id="存储模型"><a href="#存储模型" class="headerlink" title="存储模型"></a>存储模型</h3><p>Parquet的存储模型 由 Row Group、Column Chunk、 Page 组成  RowGroup 水平方向将数据划分为行组 默认于HDFS BLOCK 块对齐 一般为1G 减少对HDFS集群namenode造成压力，同时大的RowGroup 可以带来比较大的并行度, Column Chunk  行组中的每一列保存在一个列块中 Page 一个列块包含多个页 页是最小的编码单位</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">4-byte magic number &quot;PAR1&quot;</span><br><span class="line">&lt;Column 1 Chunk 1 + Column Metadata&gt;</span><br><span class="line">&lt;Column 2 Chunk 1 + Column Metadata&gt;</span><br><span class="line">...</span><br><span class="line">&lt;Column N Chunk 1 + Column Metadata&gt;</span><br><span class="line">&lt;Column 1 Chunk 2 + Column Metadata&gt;</span><br><span class="line">&lt;Column 2 Chunk 2 + Column Metadata&gt;</span><br><span class="line">...</span><br><span class="line">&lt;Column N Chunk 2 + Column Metadata&gt;</span><br><span class="line">...</span><br><span class="line">&lt;Column 1 Chunk M + Column Metadata&gt;</span><br><span class="line">&lt;Column 2 Chunk M + Column Metadata&gt;</span><br><span class="line">...</span><br><span class="line">&lt;Column N Chunk M + Column Metadata&gt;</span><br><span class="line">File Metadata</span><br><span class="line">4-byte length in bytes of file metadata (little endian)</span><br><span class="line">4-byte magic number &quot;PAR1&quot;</span><br></pre></td></tr></table></figure>
-
-<p>在这个例子中 一张表回存在N列 被划分为 M 个 row groups 文件的metadata包含所有列metadata的启始信息</p>
-<p><img src="https://tva1.sinaimg.cn/large/e6c9d24ely1h3cfz0gg5gj20pg0iddin.jpg" alt="文件存储"></p>
-<p>下面以 这样的schema 为例来说明问题</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">message Document &#123;</span><br><span class="line"> required int64 DocId;</span><br><span class="line"> optional group Links &#123;</span><br><span class="line">    repeated int64 Backward;</span><br><span class="line">    repeated int64 Forward; </span><br><span class="line"> &#125;</span><br><span class="line"> repeated group Name &#123;</span><br><span class="line">    repeated group Language &#123;</span><br><span class="line">        required string Code;</span><br><span class="line">        optional string Country; </span><br><span class="line">    &#125;</span><br><span class="line">    optional string Url; </span><br><span class="line">    &#125;</span><br><span class="line"> &#125;</span><br><span class="line"> </span><br></pre></td></tr></table></figure>
-
-<p>两种数据</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">DocId: 10</span><br><span class="line">Links</span><br><span class="line"> Forward: 20</span><br><span class="line"> Forward: 40</span><br><span class="line"> Forward: 60</span><br><span class="line">Name</span><br><span class="line"> Language</span><br><span class="line"> Code: &#x27;en-us&#x27;</span><br><span class="line"> Country: &#x27;us&#x27;</span><br><span class="line"> Language</span><br><span class="line"> Code: &#x27;en&#x27;</span><br><span class="line"> Url: &#x27;http://A&#x27;</span><br><span class="line">Name</span><br><span class="line"> Url: &#x27;http://B&#x27;</span><br><span class="line">Name</span><br><span class="line"> Language</span><br><span class="line"> Code: &#x27;en-gb&#x27;</span><br><span class="line"> Country: &#x27;gb&#x27;</span><br><span class="line"></span><br><span class="line"> DocId: 20</span><br><span class="line">Links</span><br><span class="line"> Backward: 10</span><br><span class="line"> Backward: 30</span><br><span class="line"> Forward: 80</span><br><span class="line">Name</span><br><span class="line"> Url: &#x27;http://C&#x27;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>列式存储结构为<br><img src="https://tva1.sinaimg.cn/large/e6c9d24ely1h3cgdbwx2jj20n30epq4j.jpg" alt="Column"></p>
-<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><p>Dremel: Interactive Analysis of WebScale Datasets</p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/03/27/parquet/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
