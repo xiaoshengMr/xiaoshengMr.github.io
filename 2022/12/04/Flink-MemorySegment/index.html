@@ -13,23 +13,25 @@
 
 <link rel="stylesheet" href="/css/main.css">
 
-
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif+SC:300,300italic,400,400italic,700,700italic%7CPingFang+SC:300,300italic,400,400italic,700,700italic%7CSource+Code+Pro:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css" integrity="sha256-jTIdiMuX/e3DGJUGwl3pKSxuc6YOuqtJYkM0bGQESA4=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"xiaoshengmr.top","root":"/","images":"/images","scheme":"Mist","darkmode":false,"version":"8.10.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 
     <meta name="description" content="Flink作为一款高性能的流计算处理引擎 通过定制的序列化工具、高效的内存管理机制，缓存友好的数据结构、堆外内存的控制 以及 JIT编译等 使得在JVM上能够获得类似C极致的处理性能 本文将深入分析Flink是如何进行积极的内存管理 Flink并不是将对象直接托管于JVM分配到堆上 而是将对象都序列化到一个块上 MemorySegment 是Flink内存分配的最小单元">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Flink MemorySegment">
+<meta property="og:title" content="Flink 内存管理">
 <meta property="og:url" content="http://xiaoshengmr.top/2022/12/04/Flink-MemorySegment/index.html">
 <meta property="og:site_name" content="xiaoshengmr">
 <meta property="og:description" content="Flink作为一款高性能的流计算处理引擎 通过定制的序列化工具、高效的内存管理机制，缓存友好的数据结构、堆外内存的控制 以及 JIT编译等 使得在JVM上能够获得类似C极致的处理性能 本文将深入分析Flink是如何进行积极的内存管理 Flink并不是将对象直接托管于JVM分配到堆上 而是将对象都序列化到一个块上 MemorySegment 是Flink内存分配的最小单元">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/008vxvgGly1h8r2gtwnbdj31800ja0w7.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/008vxvgGly1h8rom8x8zbj30iu0z00vi.jpg">
 <meta property="article:published_time" content="2022-12-03T16:00:00.000Z">
-<meta property="article:modified_time" content="2022-12-03T16:41:32.021Z">
+<meta property="article:modified_time" content="2022-12-04T06:14:42.657Z">
 <meta property="article:author" content="王晓圣">
 <meta property="article:tag" content="计算">
 <meta name="twitter:card" content="summary">
@@ -40,10 +42,10 @@
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://xiaoshengmr.top/2022/12/04/Flink-MemorySegment/","path":"2022/12/04/Flink-MemorySegment/","title":"Flink MemorySegment"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://xiaoshengmr.top/2022/12/04/Flink-MemorySegment/","path":"2022/12/04/Flink-MemorySegment/","title":"Flink 内存管理"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Flink MemorySegment | xiaoshengmr</title>
+<title>Flink 内存管理 | xiaoshengmr</title>
   
 
 
@@ -149,7 +151,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">1.</span> <span class="nav-text">数据结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%8B%B7%E8%B4%9D"><span class="nav-number">2.</span> <span class="nav-text">数据拷贝</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%97%E8%8A%82%E5%BA%8F"><span class="nav-number">3.</span> <span class="nav-text">字节序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A0%86%E5%86%85%E5%92%8C%E5%A0%86%E5%A4%96"><span class="nav-number">4.</span> <span class="nav-text">堆内和堆外</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">1.</span> <span class="nav-text">数据结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%8B%B7%E8%B4%9D"><span class="nav-number">2.</span> <span class="nav-text">数据拷贝</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%97%E8%8A%82%E5%BA%8F"><span class="nav-number">3.</span> <span class="nav-text">字节序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A0%86%E5%86%85%E5%92%8C%E5%A0%86%E5%A4%96"><span class="nav-number">4.</span> <span class="nav-text">堆内和堆外</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E6%B1%A0%E5%8C%96"><span class="nav-number">5.</span> <span class="nav-text">内存池化</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -240,12 +242,12 @@
     </span>
     
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="Flink MemorySegment | xiaoshengmr">
+      <meta itemprop="name" content="Flink 内存管理 | xiaoshengmr">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Flink MemorySegment
+          Flink 内存管理
         </h1>
 
         <div class="post-meta-container">
@@ -257,7 +259,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2022-12-04 00:00:00 / 修改时间：00:41:32" itemprop="dateCreated datePublished" datetime="2022-12-04T00:00:00+08:00">2022-12-04</time>
+      <time title="创建时间：2022-12-04 00:00:00 / 修改时间：14:14:42" itemprop="dateCreated datePublished" datetime="2022-12-04T00:00:00+08:00">2022-12-04</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -270,6 +272,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>6.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>6 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -301,9 +318,20 @@
 
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public char getCharLittleEndian(int index) &#123;</span><br><span class="line">        if (LITTLE_ENDIAN) &#123;</span><br><span class="line">            return getChar(index);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            return Character.reverseBytes(getChar(index));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
-<h3 id="堆内和堆外"><a href="#堆内和堆外" class="headerlink" title="堆内和堆外"></a>堆内和堆外</h3><p>Flink在实现了堆内内存后 为了解决高效的网络IO 以及进程间的内存共享 也实现了堆外内存操作 通过sun.misc.Unsafe来进行堆外分配 在之前的实现中<br>MemorySegment是一个抽象类 从而衍生出HybridMemorySegment和HeapMemorySegment 堆外和堆内的实现 JIT编译时在没有子类的情况下所有的调用方法都是确定的所有的function都是可以被de-virtualized和inlined 这可以极大地提高性能 具体可参考 <a target="_blank" rel="noopener" href="https://flink.apache.org/news/2015/09/16/off-heap-memory.html">Off-heap Memory in Apache Flink and the curious JIT compiler</a>   所以在当前的Flink版本中通过MemorySegment 来同事实现操作堆内和堆外, 成员变量heapMemory为null时则代表堆外 否则为堆内 内部实现是共用的一套分配函数 Usafe提供了强大的堆外和堆内操作机制<br>以getLong函数分析 </p>
+<h3 id="堆内和堆外"><a href="#堆内和堆外" class="headerlink" title="堆内和堆外"></a>堆内和堆外</h3><p>Flink在实现了堆内内存后 为了解决高效的网络IO 以及进程间的内存共享 也实现了堆外内存操作 通过sun.misc.Unsafe来进行堆外分配 在之前的实现中<br>MemorySegment是一个抽象类 从而衍生出HybridMemorySegment和HeapMemorySegment 堆外和堆内的实现 JIT编译时在没有子类的情况下所有的调用方法都是确定的,所有的function都是可以被de-virtualized和inlined 这可以极大地提高性能 具体可参考 <a target="_blank" rel="noopener" href="https://flink.apache.org/news/2015/09/16/off-heap-memory.html">Off-heap Memory in Apache Flink and the curious JIT compiler</a>   所以在当前的Flink版本中通过MemorySegment 来同事实现操作堆内和堆外, 成员变量heapMemory为null时则代表堆外 否则为堆内 内部实现是共用的一套分配函数 Usafe提供了强大的堆外和堆内操作机制<br>以getLong函数分析 </p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sun.misc.Unsafe.getLong(Object reference, long offset)</span><br></pre></td></tr></table></figure>
-<p>如果refer为null 则offset为操作的地址 从堆外取， 否则就会取该对象的地址 加上offset 加上8字节得到long </p>
+<p>如果refer为null 则offset为操作的地址 从堆外取， 否则就会取该对象的地址 加上offset 加上8字节得到long</p>
+<h3 id="内存池化"><a href="#内存池化" class="headerlink" title="内存池化"></a>内存池化</h3><p>在了解MemorySegment池化前 先了解下Flink的整体内存模型结构,Flink任务的执行Work节点是以TaskManager为粒度 一个TaskManager可以代表一个JVM进程  TaskManager的内存模型如下图所示<br><img src="https://tva1.sinaimg.cn/large/008vxvgGly1h8rom8x8zbj30iu0z00vi.jpg"><br>Flink JVM 进程的 进程总内存（Total Process Memory）包含了由 Flink 应用使用的内存（Flink 总内存）以及由运行 Flink 的 JVM 使用的内存。 其中，Flink 总内存（Total Flink Memory）包括 JVM 堆内存（Heap Memory）、托管内存（Managed Memory）以及其他直接内存（Direct Memory）或本地内存（Native Memory） 托管内存是由FLink分配的管理的堆外内存主要用作 RocksDB State Backend 以及流式作业中用于排序、哈希表及缓存中间结果 </p>
+<p>在这么多精细的内存控制下 其中NetWork和ManagedMemory 都是一组MemSegment集合 下面介绍下这两块内存是如何管理的以及其实现的设计模式</p>
+<p>Buffer接口是对MemorySegment池化的包装实现 类似于Netty中的ByteBuf提供 readIndex、writerIndex 对应读写操作将Segment划分为三块区域discardable、readable、writable 其具体实现NetworkBuffer继承了AbstractReferenceCountedByteBuf 来实现实例的引用计数和读写指针 非netty场景下提供了手动setBytes的方法</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">//memorySegment 实例</span><br><span class="line">private final MemorySegment memorySegment;</span><br><span class="line"></span><br><span class="line">//buffer回收器</span><br><span class="line">private final BufferRecycler recycler;</span><br><span class="line"></span><br><span class="line">//buffer中data的类型 使用one bytes 只支持128种</span><br><span class="line">private DataType dataType;</span><br><span class="line"></span><br><span class="line">//ByteBufAllocator分配器 来源于netty</span><br><span class="line">private ByteBufAllocator allocator;</span><br><span class="line"></span><br><span class="line">// buffer size</span><br><span class="line">private int currentSize;</span><br><span class="line">// 是否开启压缩</span><br><span class="line">private boolean isCompressed = false;</span><br></pre></td></tr></table></figure>
+
+<p>Flink 提供了线程安全的BufferBuilder 和BufferConsumer 读写模式 BufferBuilder向MemorySegment写数据 写线程和BufferConsumer读线程可处于不同线程中 BufferBuilder 提供了append和appendAndCommit方式来append ByteBuffer 通过PositionMarker来标记当前写的位置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">interface PositionMarker &#123;</span><br><span class="line">       int FINISHED_EMPTY = Integer.MIN_VALUE;</span><br><span class="line"></span><br><span class="line">       int get();</span><br><span class="line"></span><br><span class="line">       static boolean isFinished(int position) &#123;</span><br><span class="line">           return position &lt; 0;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       static int getAbsolute(int position) &#123;</span><br><span class="line">           if (position == FINISHED_EMPTY) &#123;</span><br><span class="line">               return 0;</span><br><span class="line">           &#125;</span><br><span class="line">           return Math.abs(position);</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>BufferPool 是一个动态的 buffer pool 继承了 BufferProvider BufferRecycler 定义申请buffer和回收buffer的功能LocalBufferPool是其具体实现 BufferPoolFactory用于创建buffer pools，整体流程是BufferPoolFactory创建buffer pool ，buffer pool持有 buffer，NetworkBufferPool是BufferPoolFactory的实现</p>
+<p>下面看下NetWorkBufferPool的初始化</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line">public NetworkBufferPool(</span><br><span class="line">            int numberOfSegmentsToAllocate, int segmentSize, Duration requestSegmentsTimeout) &#123;</span><br><span class="line">        // 要分配的 内存段个数        </span><br><span class="line">        this.totalNumberOfMemorySegments = numberOfSegmentsToAllocate;</span><br><span class="line">        // 单个内存段的大小</span><br><span class="line">        this.memorySegmentSize = segmentSize;</span><br><span class="line"></span><br><span class="line">        Preconditions.checkNotNull(requestSegmentsTimeout);</span><br><span class="line">        checkArgument(</span><br><span class="line">                requestSegmentsTimeout.toMillis() &gt; 0,</span><br><span class="line">                &quot;The timeout for requesting exclusive buffers should be positive.&quot;);</span><br><span class="line">        this.requestSegmentsTimeout = requestSegmentsTimeout;</span><br><span class="line"></span><br><span class="line">        final long sizeInLong = (long) segmentSize;</span><br><span class="line"></span><br><span class="line">        try &#123;</span><br><span class="line">            // 初始化 内存段双端队列 </span><br><span class="line">            this.availableMemorySegments = new ArrayDeque&lt;&gt;(numberOfSegmentsToAllocate);</span><br><span class="line">        &#125; catch (OutOfMemoryError err) &#123;</span><br><span class="line">            throw new OutOfMemoryError(</span><br><span class="line">                    &quot;Could not allocate buffer queue of length &quot;</span><br><span class="line">                            + numberOfSegmentsToAllocate</span><br><span class="line">                            + &quot; - &quot;</span><br><span class="line">                            + err.getMessage());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        try &#123;</span><br><span class="line">            //分配 堆外的非池化的segment</span><br><span class="line">            for (int i = 0; i &lt; numberOfSegmentsToAllocate; i++) &#123;</span><br><span class="line">                availableMemorySegments.add(</span><br><span class="line">                        MemorySegmentFactory.allocateUnpooledOffHeapMemory(segmentSize, null));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; catch (OutOfMemoryError err) &#123;</span><br><span class="line">            int allocated = availableMemorySegments.size();</span><br><span class="line"></span><br><span class="line">            // free some memory</span><br><span class="line">            availableMemorySegments.clear();</span><br><span class="line"></span><br><span class="line">            long requiredMb = (sizeInLong * numberOfSegmentsToAllocate) &gt;&gt; 20;</span><br><span class="line">            long allocatedMb = (sizeInLong * allocated) &gt;&gt; 20;</span><br><span class="line">            long missingMb = requiredMb - allocatedMb;</span><br><span class="line"></span><br><span class="line">            throw new OutOfMemoryError(</span><br><span class="line">                    &quot;Could not allocate enough memory segments for NetworkBufferPool &quot;</span><br><span class="line">                            + &quot;(required (MB): &quot;</span><br><span class="line">                            + requiredMb</span><br><span class="line">                            + &quot;, allocated (MB): &quot;</span><br><span class="line">                            + allocatedMb</span><br><span class="line">                            + &quot;, missing (MB): &quot;</span><br><span class="line">                            + missingMb</span><br><span class="line">                            + &quot;). Cause: &quot;</span><br><span class="line">                            + err.getMessage());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        // 设置 AvailabilityProvider 状态</span><br><span class="line">        availabilityHelper.resetAvailable();</span><br><span class="line"></span><br><span class="line">        long allocatedMb = (sizeInLong * availableMemorySegments.size()) &gt;&gt; 20;</span><br><span class="line"></span><br><span class="line">        LOG.info(</span><br><span class="line">                &quot;Allocated &#123;&#125; MB for network buffer pool (number of memory segments: &#123;&#125;, bytes per segment: &#123;&#125;).&quot;,</span><br><span class="line">                allocatedMb,</span><br><span class="line">                availableMemorySegments.size(),</span><br><span class="line">                segmentSize);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>通过internalCreateBufferPool 创建bufferPool</p>
 
     </div>
 
@@ -312,6 +340,23 @@
     
 
     <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>王晓圣
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://xiaoshengmr.top/2022/12/04/Flink-MemorySegment/" title="Flink 内存管理">http://xiaoshengmr.top/2022/12/04/Flink-MemorySegment/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
           <div class="post-tags">
               <a href="/tags/%E8%AE%A1%E7%AE%97/" rel="tag"># 计算</a>
           </div>
@@ -336,7 +381,6 @@
 
 
 
-    <div class="comments gitalk-container"></div>
 </div>
   </main>
 
@@ -352,6 +396,20 @@
   </span>
   <span class="author" itemprop="copyrightHolder">王晓圣</span>
 </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">8k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">7 分钟</span>
+  </span>
+</div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
   </div>
 
@@ -360,6 +418,8 @@
 
   
   <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
 <script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
 
   
@@ -368,6 +428,7 @@
 
 
 
+  <script src="/js/third-party/fancybox.js"></script>
 
 
   
@@ -375,10 +436,6 @@
 
 
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css" integrity="sha256-AJnUHL7dBv6PGaeyPQJcgQPDjt/Hn/PvYZde1iqfp8U=" crossorigin="anonymous">
-
-<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":null,"repo":null,"client_id":null,"client_secret":null,"admin_user":null,"distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":null,"js":{"url":"https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js","integrity":"sha256-Pmj85ojLaPOWwRtlMJwmezB/Qg8BzvJp5eTzvXaYAfA="},"path_md5":"7e3c4f4309d88a454c2db67ae7059cf0"}</script>
-<script src="/js/third-party/comments/gitalk.js"></script>
 
 </body>
 </html>
