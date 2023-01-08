@@ -157,7 +157,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-count">3</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -210,6 +210,108 @@
 
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://xiaoshengmr.top/2023/01/08/Apache-Calcite/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/media/xiaosheng.jpg">
+      <meta itemprop="name" content="王晓圣">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xiaoshengmr">
+      <meta itemprop="description" content="">
+    </span>
+    
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | xiaoshengmr">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2023/01/08/Apache-Calcite/" class="post-title-link" itemprop="url">PaperReading | Apache Calcite A Foundational Framework for Optimized Query Processing Over Heterogeneous Data Sources</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2023-01-08 00:00:00 / 修改时间：13:06:10" itemprop="dateCreated datePublished" datetime="2023-01-08T00:00:00+08:00">2023-01-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/DataBase/" itemprop="url" rel="index"><span itemprop="name">DataBase</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>4.5k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="简述"><a href="#简述" class="headerlink" title="简述"></a>简述</h3><p>Calcite Paper 地址:  <a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1802.10233.pdf">https://arxiv.org/pdf/1802.10233.pdf</a></p>
+<p>Apache Calcite 是一个基础的软件框架，能够为许多流行的开源数据处理系统提供查询处理、优化和查询语言的能力支持，例如：Apache Hive，Apache Storm，Apache Flink，Druid Calcite 包含查询优化器、查询处理器以及适配器等组件，模块化的查询优化器可支持扩展，其内置上百种优化规则；查询处理器，能够支持各种各样的查询语言；而适配器的设计，可以支持各种异质数据模型或存储的适配，诸如：关系型、半结构化、流式以及地理空间数据等。这种灵活（Flexible）、可嵌入（Embeddable）且可扩展的架构设计使得 Apache Calcite 在大数据处理框架上，成为一个很好的选择<br>Calcite 主要是为了解决 在数据处理领域中专用的存储计算引擎在查询优化和语言支持重复的问题，提供数据管理系统中通用的查询执行、优化的功能. 其本身没有实现 数据存储和数据管理功能 比如Hive是构建在Hadoop上的数据仓库  随着Hive的批处理转向SQL的交互式查询其最需要解决的就是查询优化器 所以很多框架使用Apache Calcite作为其优化器且集成度越来越高. Calcite 基于Hadoop生态 提供了跨系统的支持，灵活的查询优化器 从规则到成本模型 每一个优化器组件都是可插拔可扩展的.</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/01/08/Apache-Calcite/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -450,13 +552,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">8k</span>
+    <span title="站点总字数">12k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">7 分钟</span>
+    <span title="站点阅读时长">11 分钟</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动

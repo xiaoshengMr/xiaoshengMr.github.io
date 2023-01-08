@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif+SC:300,300italic,400,400italic,700,700italic%7CPingFang+SC:300,300italic,400,400italic,700,700italic%7CSource+Code+Pro:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css" integrity="sha256-jTIdiMuX/e3DGJUGwl3pKSxuc6YOuqtJYkM0bGQESA4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xiaoshengmr.top","root":"/","images":"/images","scheme":"Mist","darkmode":false,"version":"8.10.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="简述Calcite Paper 地址:  https:&#x2F;&#x2F;arxiv.org&#x2F;pdf&#x2F;1802.10233.pdf Apache Calcite 是一个基础的软件框架，能够为许多流行的开源数据处理系统提供查询处理、优化和查询语言的能力支持，例如：Apache Hive，Apache Storm，Apache Flink，Druid Calcite 包含查询优化器、查询处理器以及适配器等组件，模块化">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PaperReading | Apache Calcite A Foundational Framework for Optimized Query Processing Over Heterogeneous Data Sources">
+<meta property="og:url" content="http://xiaoshengmr.top/2023/01/08/Apache-Calcite/index.html">
+<meta property="og:site_name" content="xiaoshengmr">
+<meta property="og:description" content="简述Calcite Paper 地址:  https:&#x2F;&#x2F;arxiv.org&#x2F;pdf&#x2F;1802.10233.pdf Apache Calcite 是一个基础的软件框架，能够为许多流行的开源数据处理系统提供查询处理、优化和查询语言的能力支持，例如：Apache Hive，Apache Storm，Apache Flink，Druid Calcite 包含查询优化器、查询处理器以及适配器等组件，模块化">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://p.ipic.vip/zuwcn3.png">
+<meta property="og:image" content="https://p.ipic.vip/6q4qax.png">
+<meta property="og:image" content="https://p.ipic.vip/y20c1a.png">
+<meta property="article:published_time" content="2023-01-07T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-01-08T05:06:10.315Z">
+<meta property="article:author" content="王晓圣">
+<meta property="article:tag" content="存储">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://p.ipic.vip/zuwcn3.png">
+
+
+<link rel="canonical" href="http://xiaoshengmr.top/2023/01/08/Apache-Calcite/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://xiaoshengmr.top/2023/01/08/Apache-Calcite/","path":"2023/01/08/Apache-Calcite/","title":"PaperReading | Apache Calcite A Foundational Framework for Optimized Query Processing Over Heterogeneous Data Sources"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>PaperReading | Apache Calcite A Foundational Framework for Optimized Query Processing Over Heterogeneous Data Sources | xiaoshengmr</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">xiaoshengmr</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">简述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84"><span class="nav-number">2.</span> <span class="nav-text">整体架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E4%BB%A3%E6%95%B0"><span class="nav-number">3.</span> <span class="nav-text">查询代数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E7%AC%A6%EF%BC%88Operators%EF%BC%89"><span class="nav-number">3.1.</span> <span class="nav-text">操作符（Operators）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%B9%E8%B4%A8%EF%BC%88Traits"><span class="nav-number">3.2.</span> <span class="nav-text">特质（Traits)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%82%E9%85%8D%E5%99%A8"><span class="nav-number">4.</span> <span class="nav-text">适配器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E5%A4%84%E7%90%86%E4%B8%8E%E4%BC%98%E5%8C%96"><span class="nav-number">5.</span> <span class="nav-text">查询处理与优化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%A1%E5%88%92%E8%A7%84%E5%88%99%EF%BC%88Planner-rules%EF%BC%89"><span class="nav-number">5.1.</span> <span class="nav-text">计划规则（Planner rules）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%83%E6%95%B0%E6%8D%AE%EF%BC%88Metadata-providers%EF%BC%89"><span class="nav-number">5.2.</span> <span class="nav-text">元数据（Metadata providers）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%A1%E5%88%92%E5%BC%95%E6%93%8E%EF%BC%88Planner-engines%EF%BC%89"><span class="nav-number">5.3.</span> <span class="nav-text">计划引擎（Planner engines）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%A9%E5%8C%96%E8%A7%86%E5%9B%BE%EF%BC%88Materialized-views%EF%BC%89"><span class="nav-number">5.4.</span> <span class="nav-text">物化视图（Materialized views）</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="王晓圣"
+      src="/media/xiaosheng.jpg">
+  <p class="site-author-name" itemprop="name">王晓圣</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/xiaoshengMr" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;xiaoshengMr" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xiaoshengmr@163.com" title="E-Mail → mailto:xiaoshengmr@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/xiaoshengmr" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;xiaoshengmr" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/xiaoshengMr" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://xiaoshengmr.top/2023/01/08/Apache-Calcite/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/media/xiaosheng.jpg">
+      <meta itemprop="name" content="王晓圣">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xiaoshengmr">
+      <meta itemprop="description" content="">
+    </span>
+    
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="PaperReading | Apache Calcite A Foundational Framework for Optimized Query Processing Over Heterogeneous Data Sources | xiaoshengmr">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          PaperReading | Apache Calcite A Foundational Framework for Optimized Query Processing Over Heterogeneous Data Sources
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2023-01-08 00:00:00 / 修改时间：13:06:10" itemprop="dateCreated datePublished" datetime="2023-01-08T00:00:00+08:00">2023-01-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/DataBase/" itemprop="url" rel="index"><span itemprop="name">DataBase</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>4.5k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h3 id="简述"><a href="#简述" class="headerlink" title="简述"></a>简述</h3><p>Calcite Paper 地址:  <a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1802.10233.pdf">https://arxiv.org/pdf/1802.10233.pdf</a></p>
+<p>Apache Calcite 是一个基础的软件框架，能够为许多流行的开源数据处理系统提供查询处理、优化和查询语言的能力支持，例如：Apache Hive，Apache Storm，Apache Flink，Druid Calcite 包含查询优化器、查询处理器以及适配器等组件，模块化的查询优化器可支持扩展，其内置上百种优化规则；查询处理器，能够支持各种各样的查询语言；而适配器的设计，可以支持各种异质数据模型或存储的适配，诸如：关系型、半结构化、流式以及地理空间数据等。这种灵活（Flexible）、可嵌入（Embeddable）且可扩展的架构设计使得 Apache Calcite 在大数据处理框架上，成为一个很好的选择<br>Calcite 主要是为了解决 在数据处理领域中专用的存储计算引擎在查询优化和语言支持重复的问题，提供数据管理系统中通用的查询执行、优化的功能. 其本身没有实现 数据存储和数据管理功能 比如Hive是构建在Hadoop上的数据仓库  随着Hive的批处理转向SQL的交互式查询其最需要解决的就是查询优化器 所以很多框架使用Apache Calcite作为其优化器且集成度越来越高. Calcite 基于Hadoop生态 提供了跨系统的支持，灵活的查询优化器 从规则到成本模型 每一个优化器组件都是可插拔可扩展的.</p>
+<span id="more"></span>
+
+<h3 id="整体架构"><a href="#整体架构" class="headerlink" title="整体架构"></a>整体架构</h3><p><img src="https://p.ipic.vip/zuwcn3.png"><br>Calcite架构中 核心在于Optimizer 优化器 一个Optimizer Engine包含三个组成部分. rule 匹配规则 Calcite内置了上百种Rules 来优化relational expression 也支持自定义的rules; metadata providers 向优化器提供信息 有助于指导优化器向着目标(减少整体cost)进行优化, 信息主要是行数、table 哪一列 也包含RelNode树中执行的subexpression cost 函数; planner engines  主要是触发rules 来达到指定目标 比如 cost-based optimizer (CBO) 的目标来减少Cost.</p>
+<h3 id="查询代数"><a href="#查询代数" class="headerlink" title="查询代数"></a>查询代数</h3><h4 id="操作符（Operators）"><a href="#操作符（Operators）" class="headerlink" title="操作符（Operators）"></a>操作符（Operators）</h4><p>关系代数是 Calcite 的核心部分。除了最常见的诸如过滤（filter）、映射（project）、关联（join）等，Calcite 提供了额外的操作符来满足不同的需求，比如能够简单表示复杂操作或者更有效识别优化时机。举例来说，对于 OLAP，决策支持和流应用来说，使用窗口函数来表达复杂分析功能已经变得很常见（例如，按时间段、数值或行数进行窗口滑动）。为此，Calcite 引入了窗口（window）操作符来封装窗口的定义（上下限，分区等）以及窗口上执行的聚合函数。</p>
+<h4 id="特质（Traits"><a href="#特质（Traits" class="headerlink" title="特质（Traits)"></a>特质（Traits)</h4><p>Calcite 没有使用不同的实体来表示逻辑和物理操作符。相反，其使用特质来描述与操作相关的物理属性。这些特质能够帮助优化器来评估不同替代计划的执行成本。修改特质的值并不会改变需要评估的逻辑表达式，即，指定操作符生成的行仍然是一样的</p>
+<p>在优化过程中，Calcite 会尝试在一些关系表达式上强制执行指定的特质，例如，某些列的排序顺序。关系操作符实现了一个转换接口，用来标识如何将将表达式的特质从一个值转换为另一个值。<br>Calcite 包含了常用的一些特质，这些特质描述了关系表达式生成的数据物理属性，例如排序（ordering），分组（grouping）和分区（partitioning），和 SCOPE 优化器类似，Calcite 优化器可以推理这些属性，并且利用这些推理来找到不必要的操作计划。例如，若排序操作符的输入已经正确排序（行排序与后台系统的行排序相同），那么排序操作就可以移除。<br>除了这些特性，Caclite 还包括一个重要的特质，即调用约定（calling convention）。本质上，特质表示表达式执行的数据处理系统。将调用约定当作特质，可以使 Calcite 能够保持透明的优化查询，对于跨引擎执行而言，该约定被看作是其他物理属性。</p>
+<p><img src="https://p.ipic.vip/6q4qax.png"></p>
+<p>如图所示，做 Products 和 Orders 的跨存储关联， Products 保存在 MySQL 中，而 Orders 表则保存在 Splunk 中。首先， 在 Splunk 中扫描 Orders表，在 Mysql 中扫描 Products表，而关联操作在逻辑上没有选择具体的执行引擎。而且，图 2 上的 SQL 查询包含过滤操作，该操作通过适配器具体的规则， 将过滤操作下推至 splunk 中执行。对于关联操作，一种可行的解决方案是将关联操作转成 Spark 实现，且将 MySQL 和 Splunk 的输入也转换至 Spark 实现。还一种更有效的实现方式，Splunk 利用 ODBC 方式执行 MySQL 表的查询，如此就可以实现整个操作在 Splunk 引擎中执行</p>
+<h3 id="适配器"><a href="#适配器" class="headerlink" title="适配器"></a>适配器</h3><p>Calcite 中的适配器一种架构模式，其定义了对各种数据源如何进行访问。图 3 描绘了适配器的组件，从图上我们可以看出，适配器主要由模型(model)，Schema 和 SchemaFactory 组成。模型定义了访问数据源所需要属性的结构，Schema 则是模型中数据的定义，包括数据格式和布局。数据本身则是通过表进行访问，Calcite 借助适配器中关于表的定义来读取数据，查询的执行都会依赖表的定义。另外，适配器可以向计划器中添加自己的一组规则，例如如何从将各种类型的逻辑关系表达式向具体适配器约定的关系表达式转换。SchemaFactory 则从模型中获取元数据信息并生成 schema。</p>
+<p><img src="https://p.ipic.vip/y20c1a.png"></p>
+<h3 id="查询处理与优化"><a href="#查询处理与优化" class="headerlink" title="查询处理与优化"></a>查询处理与优化</h3><p>查询优化器是 Calcite 框架中的主要组件，通过重复应用计划规则于关系表达式上来达到优化查询的目的。Calcite 成本模型指导整个流程，而计划引擎尝试生成与原表达式相同语义且成本更低的可替代表达式。优化器中每个组件都是可扩展的，用户可以添加关系操作、规则、成本模型和统计。</p>
+<h4 id="计划规则（Planner-rules）"><a href="#计划规则（Planner-rules）" class="headerlink" title="计划规则（Planner rules）"></a>计划规则（Planner rules）</h4><p>Calcite 包含一系列计划规则用于转换表达式树。特别地，规则匹配表达式树的指定模式并执行表达式的转换，该转换过程会保留原有表达式的语义。Calcite 内置了数百个优化规则，对于依赖 Calcite 进行优化的数据处理系统来说，也可以定制或重写已有的规则。例如，Calcite 为 Apache Cassandra 提供了一个适配器，Cassandra 是一个宽列式存储，其按表中列的子集对数据进行分区，然后在每个分区中根据其余列的子集进行排序</p>
+<h4 id="元数据（Metadata-providers）"><a href="#元数据（Metadata-providers）" class="headerlink" title="元数据（Metadata providers）"></a>元数据（Metadata providers）</h4><p>元数据是 Calcite 优化器的重要组成部分，其有两个主要目的：1、指导优化器如何降低整体查询开销成本；2、当应用优化规则时，元数据为这些规则提供相应的信息。元数据主要职责是为优化器提供相应的信息。特别是，Caclite 中默认元数据提供了函数实现，包括：操作树中执行子表达式的成本开销、执行行数、执行表达式结果数据的大小以及执行的最大并行度。反过来，其还可以提供有关计划结构的信息，例如，存在具体树结点下的过滤条件。<br>Calcite 为数据处理系统提供了注入自定义元数据的接口。这些系统可以重写 Calcite 原有的元数据提供者(providers)，或是提供自定义的新元数据函数以用于优化阶段。然而，对于大多数人而言，提供输入数据统计信息就已经足够，包括表的行数、表的大小以及给定列的值是否唯一。其余工作交给 Calcite 来完成即可。<br>由于元数据提供是可插拔的，所以其编译和执行是使用 janino 来完成，janino 是 Java 的一个轻量级编译器。该实现包括可显著提高性能的元数据结果缓存。例如当我们需要计算多种类型的元数据（指定关联的基数、平均行大小以及可选择性）时，，且这些计算需要依赖其输入</p>
+<h4 id="计划引擎（Planner-engines）"><a href="#计划引擎（Planner-engines）" class="headerlink" title="计划引擎（Planner engines）"></a>计划引擎（Planner engines）</h4><p>计划引擎的主要功能是不断触发优化规则，直至达到最优结果。当前，Calcite 默认提供了两种计划引擎，用户也可以按照 Calcite 规范，自定义计划引擎。<br>第一种是基于成本的计划引擎，该计划引擎以降低整个查询的执行成本为目标。该计划引擎使用的动态编程算法，类似于 Volcanno，可以创建和跟踪不同可选计划，这些计划由规则触发而生成。首先，需要向计划引擎注册表达式以及基于表达式的属性和输入摘要。当在表达式 e1上触发某规则，那么该规则会生成新的表达式 e2 ，然后计划引擎会将 e2 添加至 e1 所属的等价表达式集合 Sa中。此外，计划引擎会为该新的表达式生成一个摘要，该摘要将会与之前注册的其他表达式摘要进行比较。如果发现与一个 e3 的表达式摘要相似，而这个表达式 e3属于 Sb集合，那么计划引擎会合并 Sa和 Sb两个集合。该过程直至达可配置的固定点才会停止。需要指出的是，计划引擎会搜索所有的规则空间以保证所有的规则都应用至整个表达式，或者采用启发式的方法来停止优化，当再进行计划迭代时，所花的成本不超过指定阈值。借助元数据提供的信息，成本函数可以判定选择使用哪个优化规则。Calciter 提供的默认成本函数实现，将给定表达式所需要 CPU、IO 以及内存资源也考虑进来。<br>第二种计划引擎是一个穷举计划引擎，该计划引擎穷举计划规则直至生成一个不再发生变化的表达式。这种计划引擎有助于快速执行规则，不需要考虑每个表达式的执行成本。<br>用户可以根据具体的需求场景来选择采用哪种计划引擎，当需求发生变化时，也可以在两个计划引擎之间进行切换。或者，用户可以选择生成多个阶段优化逻辑，并将之应用到优化过程中的衔接阶段。重要的是，该两种计划引擎通过检索不同查询计划，能够帮助 Calcite 用户减少整体的优化时间</p>
+<h4 id="物化视图（Materialized-views）"><a href="#物化视图（Materialized-views）" class="headerlink" title="物化视图（Materialized views）"></a>物化视图（Materialized views）</h4><p>数据仓库中加速查询速度的最强大技术之一就是相关摘要的预计算或物化视图。Calcite 的适配器以及依赖 Calcite 的项目在物化视图上也有相应的解决方案。例如，Cassandra 允许用户基于已有表自定义物化视图，且物化视图由系统自动来维护。类似 Cassandra 的引擎，将其视图暴露给 Calcite。Calcite 的优化器可以使用这些视图来重写查询语句，而不是查询原始表。且 Calcite 提供了两种物化视图重写算法的实现。第一种方法是基于视图替换算法。该算法的目的是利用了物化视图表达式来替代关系代数树中的等价部分。算法过程如下：1、将物化视图的 scan 操作符以及物化视图定义计划注册到计划引擎中；2、尽量统一计划中触发的转换规则。视图不需要与被替换的查询表达式完成匹配，因为该替换算法可以实现部分重写，其中包括额外的操作符来计算所需的表达式，例如：残留谓词条件过滤器。另外一种算法是基于 lattices。一旦数据源被声明为 lattice，Calcite 会将每一个物化表示为一个 tile，优化器能够利用tile来优化查询。一方面，在星型模式组织的数据源上，该重写算法匹配表达式非常有效，星型模式组织的数据源在 OLAP 中则很常见。另一方面，因其对底层架构有限制，导致其比视图替换的限制性更高。</p>
+<p>下篇文章将会深入分析其优化器具体实现原理.</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>王晓圣
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://xiaoshengmr.top/2023/01/08/Apache-Calcite/" title="PaperReading | Apache Calcite A Foundational Framework for Optimized Query Processing Over Heterogeneous Data Sources">http://xiaoshengmr.top/2023/01/08/Apache-Calcite/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E5%AD%98%E5%82%A8/" rel="tag"># 存储</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/12/04/Flink-MemorySegment/" rel="prev" title="Flink MemorySegment">
+                  <i class="fa fa-chevron-left"></i> Flink MemorySegment
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">王晓圣</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">12k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">11 分钟</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+
+</body>
+</html>
