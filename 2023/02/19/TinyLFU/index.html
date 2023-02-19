@@ -21,23 +21,32 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"xiaoshengmr.top","root":"/","images":"/images","scheme":"Mist","darkmode":false,"version":"8.10.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 
-    <meta property="og:type" content="website">
-<meta property="og:title" content="xiaoshengmr">
-<meta property="og:url" content="http://xiaoshengmr.top/index.html">
+    <meta name="description" content="缓存是计算机科学中用于提高系统在多个领域的性能的最基本和最有效的方法之一。缓存起作用的直观原因是数据访问多计算机科学领域表现出相当程度的“局部性”。 更正式的捕获方式这个“局部性”是通过概率分布来表征所有可能的数据项的访问频率，并注意到在计算机科学的许多领域中，概率分布是高度倾斜的，这意味着少数对象比其他对象更有可能被访问对象。 此外，在许多工作负载中，访问模式以及相应的概率分布，随时间变化。 这">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PaperReading | TinyLFU A Highly Efficient Cache Admission Policy">
+<meta property="og:url" content="http://xiaoshengmr.top/2023/02/19/TinyLFU/index.html">
 <meta property="og:site_name" content="xiaoshengmr">
+<meta property="og:description" content="缓存是计算机科学中用于提高系统在多个领域的性能的最基本和最有效的方法之一。缓存起作用的直观原因是数据访问多计算机科学领域表现出相当程度的“局部性”。 更正式的捕获方式这个“局部性”是通过概率分布来表征所有可能的数据项的访问频率，并注意到在计算机科学的许多领域中，概率分布是高度倾斜的，这意味着少数对象比其他对象更有可能被访问对象。 此外，在许多工作负载中，访问模式以及相应的概率分布，随时间变化。 这">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://p.ipic.vip/cuz8gy.png">
+<meta property="og:image" content="https://p.ipic.vip/nt9rfy.png">
+<meta property="og:image" content="https://p.ipic.vip/h38kw5.png">
+<meta property="article:published_time" content="2023-02-18T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-02-19T09:33:17.801Z">
 <meta property="article:author" content="王晓圣">
+<meta property="article:tag" content="存储">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://p.ipic.vip/cuz8gy.png">
 
 
-<link rel="canonical" href="http://xiaoshengmr.top/">
+<link rel="canonical" href="http://xiaoshengmr.top/2023/02/19/TinyLFU/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":true,"isPost":false,"lang":"zh-CN","comments":"","permalink":"","path":"index.html","title":""}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://xiaoshengmr.top/2023/02/19/TinyLFU/","path":"2023/02/19/TinyLFU/","title":"PaperReading | TinyLFU A Highly Efficient Cache Admission Policy"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>xiaoshengmr</title>
+<title>PaperReading | TinyLFU A Highly Efficient Cache Admission Policy | xiaoshengmr</title>
   
 
 
@@ -67,7 +76,7 @@
 
     <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
-      <h1 class="site-title">xiaoshengmr</h1>
+      <p class="site-title">xiaoshengmr</p>
       <i class="logo-line"></i>
     </a>
   </div>
@@ -209,16 +218,17 @@
 </noscript>
 
 
-    <div class="main-inner index posts-expand">
+    <div class="main-inner post posts-expand">
 
-    
+
+  
 
 
 <div class="post-block">
   
   
 
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://xiaoshengmr.top/2023/02/19/TinyLFU/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -232,13 +242,13 @@
     </span>
     
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | xiaoshengmr">
+      <meta itemprop="name" content="PaperReading | TinyLFU A Highly Efficient Cache Admission Policy | xiaoshengmr">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/02/19/TinyLFU/" class="post-title-link" itemprop="url">PaperReading | TinyLFU A Highly Efficient Cache Admission Policy</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          PaperReading | TinyLFU A Highly Efficient Cache Admission Policy
+        </h1>
 
         <div class="post-meta-container">
           <div class="post-meta">
@@ -286,13 +296,12 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>缓存是计算机科学中用于提高系统在多个领域的性能的最基本和最有效的方法之一。缓存起作用的直观原因是数据访问多计算机科学领域表现出相当程度的“局部性”。 更正式的捕获方式这个“局部性”是通过概率分布来表征所有可能的数据项的访问频率，并注意到在计算机科学的许多领域中，概率分布是高度倾斜的，这意味着少数对象比其他对象更有可能被访问对象。 此外，在许多工作负载中，访问模式以及相应的概率分布，随时间变化。 这种现象也被称为“时间局部性”。<br>鉴于缓存大小通常是有限的，缓存设计者面临着如何选择项目的困境存储在缓存中。特别是，当为缓存保留的内存变满时，决定哪些项目应该从缓存中逐出。显然，驱逐决定应该以高效的方式进行方式，以避免需要回答的计算和空间开销的情况这些问题超过了使用缓存的好处。缓存机制使用的空间为了决定哪些项目应该被插入到缓存中，哪些项目应该被驱逐称为缓存的元数据。</p>
+        <p>缓存是计算机科学中用于提高系统在多个领域的性能的最基本和最有效的方法之一。缓存起作用的直观原因是数据访问多计算机科学领域表现出相当程度的“局部性”。 更正式的捕获方式这个“局部性”是通过概率分布来表征所有可能的数据项的访问频率，并注意到在计算机科学的许多领域中，概率分布是高度倾斜的，这意味着少数对象比其他对象更有可能被访问对象。 此外，在许多工作负载中，访问模式以及相应的概率分布，随时间变化。 这种现象也被称为“时间局部性”。<br>鉴于缓存大小通常是有限的，缓存设计者面临着如何选择项目的困境存储在缓存中。特别是，当为缓存保留的内存变满时，决定哪些项目应该从缓存中逐出。显然，驱逐决定应该以高效的方式进行方式，以避免需要回答的计算和空间开销的情况这些问题超过了使用缓存的好处。缓存机制使用的空间为了决定哪些项目应该被插入到缓存中，哪些项目应该被驱逐称为缓存的元数据。</p>
 <p>当数据访问模式的概率分布随时间恒定时，最不常用 (LFU) 产生最高的缓存命中率 根据 LFU，在大小为 n 个项目的缓存，在每个时刻，迄今为止最常用的 n 个项目都保存在缓存中。<br>然而，LFU 有两个明显的局限性。 首先，LFU 的已知实现需要维护大量和复杂的元数据。 其次，在大多数实际工作负载中，访问频率会发生根本性变化。<br>依赖于“时间局部性”属性的 LFU 的流行替代品被称为最近最少使用（LRU，最后访问的项目总是插入到缓存中，最近最少的被访问的项目被逐出（当缓存已满时）。 LRU 可以比LFU1 并自动适应数据访问模式的临时变化和突发工作量。 然而，在许多工作负载下，LRU 需要比 LFU 大得多的缓存才能获得相同的命中率<br>TinyLFU的整体架构<br><img src="https://p.ipic.vip/cuz8gy.png"></p>
 <p>TinyLFU 是 LFU的一个变种算法 主要解决统计频率信息的开销 和 应对数据概率分布出现变化 应对突发性流量的的情况 , 经常访问的记录占用了缓存，偶然的流量不太可能会被保留下来,而且过去的记录在将来不一定会使用，这样就会一直占据缓存.就是论文中提到的数据保鲜机制为了使历史保持最新并删除旧时间 二是 内存的开销。</p>
 <p><img src="https://p.ipic.vip/nt9rfy.png"><br>TinyLFU 提出使用Approximate Counting的方式，设计思想和BloomFilter的原理类似 不过 BloomFiler只有0和1，Count–Min Sketch 会对一个key进行多次hash后将 index到多个数组后的位置进行累加<br>数据的保鲜机制 就是去除过往频率很高但是不经常缓存 Caffeine有一个Freshness Mechanism 机制 就是统计当前的整体技术（当前所有的统计频率之和）达到某一个值 将所有的记录除2 其正确性论也给出了证明</p>
 <p><img src="https://p.ipic.vip/h38kw5.png"><br>在 Caffeine Java 高性能缓存库 对 TinyLFU 进行了相关改进, 是因为在新记录还没有建立足够的频率就被剔除出去了 这使得命中率下降 Caffeine 设计了 一种 Window Tiny LFU 优化<br>包括两个缓存模块 主缓存是SLRU, SLRU包括一个 protected 和 一个 probation 缓存区。 通过增加一个缓存区(Window Cache), 当有新记录插入时，会先在window区，当window区满了之后 就会根据LRU把淘汰的数据放到probation区 如果protation区也满了，就把candidate 和 probation区要淘汰的元素进行比较, 胜者留在probation, 输者进行淘汰。</p>
 
-      
     </div>
 
     
@@ -300,331 +309,42 @@
     
 
     <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>王晓圣
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://xiaoshengmr.top/2023/02/19/TinyLFU/" title="PaperReading | TinyLFU A Highly Efficient Cache Admission Policy">http://xiaoshengmr.top/2023/02/19/TinyLFU/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
 </div>
 
+          <div class="post-tags">
+              <a href="/tags/%E5%AD%98%E5%82%A8/" rel="tag"># 存储</a>
+          </div>
 
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://xiaoshengmr.top/2023/01/08/Apache-Calcite/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/media/xiaosheng.jpg">
-      <meta itemprop="name" content="王晓圣">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="xiaoshengmr">
-      <meta itemprop="description" content="">
-    </span>
-    
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | xiaoshengmr">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/01/08/Apache-Calcite/" class="post-title-link" itemprop="url">PaperReading | Apache Calcite A Foundational Framework for Optimized Query Processing Over Heterogeneous Data Sources</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2023-01-08 00:00:00 / 修改时间：13:06:10" itemprop="dateCreated datePublished" datetime="2023-01-08T00:00:00+08:00">2023-01-08</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/DataBase/" itemprop="url" rel="index"><span itemprop="name">DataBase</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>4.5k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>4 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="简述"><a href="#简述" class="headerlink" title="简述"></a>简述</h3><p>Calcite Paper 地址:  <a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1802.10233.pdf">https://arxiv.org/pdf/1802.10233.pdf</a></p>
-<p>Apache Calcite 是一个基础的软件框架，能够为许多流行的开源数据处理系统提供查询处理、优化和查询语言的能力支持，例如：Apache Hive，Apache Storm，Apache Flink，Druid Calcite 包含查询优化器、查询处理器以及适配器等组件，模块化的查询优化器可支持扩展，其内置上百种优化规则；查询处理器，能够支持各种各样的查询语言；而适配器的设计，可以支持各种异质数据模型或存储的适配，诸如：关系型、半结构化、流式以及地理空间数据等。这种灵活（Flexible）、可嵌入（Embeddable）且可扩展的架构设计使得 Apache Calcite 在大数据处理框架上，成为一个很好的选择<br>Calcite 主要是为了解决 在数据处理领域中专用的存储计算引擎在查询优化和语言支持重复的问题，提供数据管理系统中通用的查询执行、优化的功能. 其本身没有实现 数据存储和数据管理功能 比如Hive是构建在Hadoop上的数据仓库  随着Hive的批处理转向SQL的交互式查询其最需要解决的就是查询优化器 所以很多框架使用Apache Calcite作为其优化器且集成度越来越高. Calcite 基于Hadoop生态 提供了跨系统的支持，灵活的查询优化器 从规则到成本模型 每一个优化器组件都是可插拔可扩展的.</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2023/01/08/Apache-Calcite/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
         
-      
-    </div>
 
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://xiaoshengmr.top/2022/12/04/Flink-MemorySegment/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/media/xiaosheng.jpg">
-      <meta itemprop="name" content="王晓圣">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="xiaoshengmr">
-      <meta itemprop="description" content="">
-    </span>
-    
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | xiaoshengmr">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/12/04/Flink-MemorySegment/" class="post-title-link" itemprop="url">Flink MemorySegment</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2022-12-04 00:00:00" itemprop="dateCreated datePublished" datetime="2022-12-04T00:00:00+08:00">2022-12-04</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-12-31 23:53:56" itemprop="dateModified" datetime="2022-12-31T23:53:56+08:00">2022-12-31</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Flink/" itemprop="url" rel="index"><span itemprop="name">Flink</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>6.2k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>6 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>Flink作为一款高性能的流计算处理引擎 通过定制的序列化工具、高效的内存管理机制，缓存友好的数据结构、堆外内存的控制 以及 JIT编译等 使得在JVM上能够获得类似C极致的处理性能 本文将深入分析Flink是如何进行内存管理</p>
-<p>Flink并不是将对象直接托管于JVM分配到堆上 而是将对象都序列化到一个块上 MemorySegment 是Flink内存分配的最小单元 </p>
-<p><img src="https://p.ipic.vip/2bj330.png"></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/12/04/Flink-MemorySegment/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/01/08/Apache-Calcite/" rel="prev" title="PaperReading | Apache Calcite A Foundational Framework for Optimized Query Processing Over Heterogeneous Data Sources">
+                  <i class="fa fa-chevron-left"></i> PaperReading | Apache Calcite A Foundational Framework for Optimized Query Processing Over Heterogeneous Data Sources
+                </a>
             </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://xiaoshengmr.top/2022/03/27/Apache-Parquet/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/media/xiaosheng.jpg">
-      <meta itemprop="name" content="王晓圣">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="xiaoshengmr">
-      <meta itemprop="description" content="">
-    </span>
-    
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | xiaoshengmr">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/03/27/Apache-Parquet/" class="post-title-link" itemprop="url">Aapche Parquet</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2022-03-27 00:00:00" itemprop="dateCreated datePublished" datetime="2022-03-27T00:00:00+08:00">2022-03-27</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-12-31 23:53:54" itemprop="dateModified" datetime="2022-12-31T23:53:54+08:00">2022-12-31</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/DataBase/" itemprop="url" rel="index"><span itemprop="name">DataBase</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>1.8k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>2 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>Parquet是一开源支持嵌套数据的列式存储格式 在大数据场景中 列存相对于行存能够提供更高的压缩比和更小的IO性能 可以只读需要的的数据降低,IO数据量,可以使用更高的压缩编码( Run Length Encoding 和 Delta Encoding 等)</p>
-<p>Google 的 Dremel系统 通过使用 record shredding and assembly algorithm 来表达复杂的嵌套数据类型，同时将列进行高效压缩 Parquet就是基于Dremel的数据模型和算法的工程实现.</p>
-<p>Parquet是不绑定数据处理框架的的 可以适配多种组建查询引擎、计算框架、数据模型 parquet-format 定义了 Parquet内部的数据类型和存储格式 parquet-mr 包含了外部对象结构到Parquet数据类型的映射和转换</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/03/27/Apache-Parquet/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
+            <div class="post-nav-item">
             </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
+          </div>
     </footer>
   </article>
 </div>
+
 
 
 
